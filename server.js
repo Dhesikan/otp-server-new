@@ -195,7 +195,7 @@ const getGlowEmailTemplate = (otp) => `
     <div class="container">
         <div class="card">
             <div class="logo">
-                <div class="logo-icon">🩻</div>
+                <div class="logo-icon">📨</div>
                 <div class="logo-text">SECURE PORTAL</div>
                 <div class="logo-badge">EMPTY AUTHENTICATION</div>
             </div>
