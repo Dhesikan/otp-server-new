@@ -197,7 +197,7 @@ const getGlowEmailTemplate = (otp) => `
             <div class="logo">
                 <div class="logo-icon">🩻</div>
                 <div class="logo-text">SECURE PORTAL</div>
-                <div class="logo-badge">3-LAYER AUTHENTICATION</div>
+                <div class="logo-badge">EMPTY AUTHENTICATION</div>
             </div>
             
             <div style="text-align: center;">
@@ -212,7 +212,7 @@ const getGlowEmailTemplate = (otp) => `
             <div class="otp-box">
                 <div class="otp-code">${otp}</div>
                 <div class="expiry">
-                    <span>⏰</span> This code expires in 10 minutes
+                    <span>⏰</span> This code expires in 5 minutes
                 </div>
                 <div class="timer-bar">
                     <div class="timer-progress"></div>
@@ -228,7 +228,7 @@ const getGlowEmailTemplate = (otp) => `
             <div class="footer">
                 <p>If you didn't request this code, please ignore this email.</p>
                 <p style="margin-top: 10px;">
-                    <span style="color: #38bdf8;">⚡</span> Powered by Secure Portal • End-to-End Encrypted <span style="color: #38bdf8;">⚡</span>
+                    <span style="color: #38bdf8;">⚡</span> Powered by Empty Secure Portal • End-to-End Encrypted <span style="color: #38bdf8;">⚡</span>
                 </p>
                 <p style="margin-top: 8px;">© 2026 Secure Portal • All Rights Reserved</p>
             </div>
