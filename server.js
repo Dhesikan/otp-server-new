@@ -195,7 +195,7 @@ const getGlowEmailTemplate = (otp) => `
     <div class="container">
         <div class="card">
             <div class="logo">
-                <div class="logo-icon">E</div>
+                <div class="logo-icon">🩻</div>
                 <div class="logo-text">SECURE PORTAL</div>
                 <div class="logo-badge">3-LAYER AUTHENTICATION</div>
             </div>
@@ -224,13 +224,6 @@ const getGlowEmailTemplate = (otp) => `
                 <strong style="color: #ef4444;">Never share this code</strong> with anyone, not even our support team.
             </div>
             
-            <div style="text-align: center;">
-                <a href="#" class="button">
-                    <span style="display: flex; align-items: center; gap: 8px;">
-                        🔓 Return to Login → 
-                    </span>
-                </a>
-            </div>
             
             <div class="footer">
                 <p>If you didn't request this code, please ignore this email.</p>
