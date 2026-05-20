@@ -3,16 +3,14 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const app = express();
 
-// ============ CORS CONFIGURATION (FIXED) ============
+// ============ CORS CONFIGURATION ============
 app.use(cors({
-    origin: '*',  // Allow all origins (Netlify, Vercel, localhost)
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Handle preflight requests
 app.options('*', cors());
-
 app.use(express.json());
 
 // Store OTPs temporarily
@@ -160,9 +158,8 @@ const getGlowEmailTemplate = (otp) => `
 </html>
 `;
 
-// ============ SEND OTP API ============
+// ============ SEND OTP API (UPDATED with better Gmail settings) ============
 app.post('/api/send-otp', async (req, res) => {
-    // Set CORS headers
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -187,13 +184,26 @@ app.post('/api/send-otp', async (req, res) => {
     // Try to send email if credentials are configured
     if (EMAIL_USER && EMAIL_PASS) {
         try {
+            // UPDATED: Better Gmail SMTP configuration
             const transporter = nodemailer.createTransport({
-                service: 'gmail',
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,  // Use SSL
                 auth: {
                     user: EMAIL_USER,
                     pass: EMAIL_PASS
-                }
+                },
+                tls: {
+                    rejectUnauthorized: false
+                },
+                connectionTimeout: 30000,
+                greetingTimeout: 30000,
+                socketTimeout: 30000
             });
+            
+            // Verify connection first
+            await transporter.verify();
+            console.log('✅ SMTP connection verified');
             
             const mailOptions = {
                 from: `"Secure Portal" <${EMAIL_USER}>`,
@@ -202,16 +212,20 @@ app.post('/api/send-otp', async (req, res) => {
                 html: getGlowEmailTemplate(otp)
             };
             
-            await transporter.sendMail(mailOptions);
-            console.log(`✅ Email sent to ${email}`);
+            const info = await transporter.sendMail(mailOptions);
+            console.log(`✅ Email sent to ${email}, Message ID: ${info.messageId}`);
             return res.json({ success: true, message: 'OTP sent to your email' });
+            
         } catch (error) {
             console.error('❌ Email error:', error.message);
+            console.error('Full error details:', error);
             // Fall through to demo mode
         }
+    } else {
+        console.log('⚠️ Email credentials not configured');
     }
     
-    // Demo mode fallback (when email not configured or fails)
+    // Demo mode fallback
     console.log(`⚠️ Using demo mode for ${email}`);
     return res.json({ 
         success: true, 
@@ -222,7 +236,6 @@ app.post('/api/send-otp', async (req, res) => {
 
 // ============ VERIFY OTP API ============
 app.post('/api/verify-otp', (req, res) => {
-    // Set CORS headers
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -284,5 +297,5 @@ app.listen(PORT, () => {
     console.log(`\n✅ OTP Server running on port ${PORT}`);
     console.log(`🌐 CORS enabled - Accepting requests from any origin`);
     console.log(`📧 Email Service: ${EMAIL_USER && EMAIL_PASS ? 'CONFIGURED ✅' : 'DEMO MODE ONLY ⚠️'}`);
-    console.log(`\n📍 Health Check: http://localhost:${PORT}/api/health\n`);
+    console.log(`📍 Health Check: http://localhost:${PORT}/api/health\n`);
 });
